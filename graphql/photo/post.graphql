@@ -1,0 +1,17 @@
+mutation post($input: PostPhotoInput!) {
+  postPhoto(input: $input) {
+    id
+    url
+		postedBy {
+    	name
+      avatar
+    }
+  }
+}
+
+# variables
+{
+  "input": {
+    "name": "Seunggabi Kim"
+  }
+}

@@ -7,7 +7,7 @@ query currentUser {
 }
 
 
-# Headers
+# headers
 {
   "Authorization": "ghu_c8l9xm0HSdKmk8grhE3gZtfpjP9rQQ3ZjjqJ"
 }
