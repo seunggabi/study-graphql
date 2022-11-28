@@ -1,4 +1,4 @@
-const {ApolloServer} = require("apollo-server")
+const {ApolloServer} = require('apollo-server');
 
 const typeDefs = `
   enum PhotoCategory {
@@ -7,6 +7,13 @@ const typeDefs = `
     ACTION
     LANDSCAPE
     GRAPHIC
+  }
+  
+  type User {
+    githubLogin: ID!
+    name: String
+    avatar: String
+    postedPhotos: [Photo!]!
   }
   
   type Query {
@@ -24,6 +31,7 @@ const typeDefs = `
     name: String!
     description: String
     category: PhotoCategory!
+    postedBy: User!
   }
   
   input PostPhotoInput {
@@ -31,40 +39,65 @@ const typeDefs = `
     category: PhotoCategory=PORTRAIT
     description: String
   }
-`
+`;
 
-let _id = 0
-let photos = []
+let _id = 0;
+const users = [
+  {githubLogin: 'mHattrup', name: 'Mike Hattrup'},
+  {githubLogin: 'gPlake', name: 'Glen Plake'},
+  {githubLogin: 'sSchmidt', name: 'Scot Schmidt'},
+];
+const photos = [
+  {
+    id: '1',
+    name: 'Dropping the Heart Chute',
+    description: 'The heart chute is one of my favorite chutes',
+    category: 'ACTION',
+    githubUser: 'gPlake',
+  },
+  {
+    id: '2',
+    name: 'Enjoying the sunshine',
+    category: 'SELFIE',
+    githubUser: 'sSchmidt',
+  },
+  {
+    id: '3',
+    name: 'Gunbarrel 25',
+    deescription: '25 laps on gunbarrel today',
+    category: 'LANDSCAPE',
+    githubUser: 'sSchmidt',
+  },
+];
 
 const resolvers = {
   Query: {
     totalPhotos: () => photos.length,
-    allPhotos: () => photos
+    allPhotos: () => photos,
   },
 
   Mutation: {
     postPhoto(parent, args) {
       const photo = {
         id: _id++,
-        ...args.input
-      }
+        ...args.input,
+      };
 
-      photos.push(photo)
+      photos.push(photo);
 
-      return photo
-    }
+      return photo;
+    },
   },
 
   Photo: {
-    url: parent => `http://yoursite.com/img/${parent.id}.png`
-  }
-}
+    url: (parent) => `http://yoursite.com/img/${parent.id}.png`,
+  },
+};
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers
-})
+  typeDefs, resolvers,
+});
 
 server
   .listen()
-  .then(({url}) => console.log(`GraphQL Service running on ${url}`))
+  .then(({url}) => console.log(`GraphQL Service running on ${url}`));

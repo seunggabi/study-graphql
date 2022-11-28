@@ -3,7 +3,7 @@
 brew install
 
 npm init -y
-npm install apollo-server graphql nodemon
+npm install
 
 npm start
 ``` 

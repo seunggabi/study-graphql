@@ -1,0 +1,24 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2020": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "airbnb-base"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 11,
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-undef": "off",
+    "no-unused-vars": "off",
+    "import/no-unresolved": "off",
+    "object-curly-spacing": "off",
+    "no-restricted-syntax": "off",
+    "no-underscore-dangle": "off",
+    "no-plusplus": "off"
+  }
+}
