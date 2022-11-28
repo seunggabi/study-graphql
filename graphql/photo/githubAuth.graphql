@@ -1,0 +1,10 @@
+mutation {
+  githubAuth(code:"c0974caafdd5e9cd25e4") {
+    token
+    user {
+      githubLogin
+      name
+      avatar
+    }
+  }
+}

@@ -34,6 +34,7 @@ const typeDefs = `
     allPhotos: [Photo!]!
     totalUsers: Int!
     allUsers: [User!]!
+    me: User
   }
 
   type Mutation {
@@ -133,7 +134,8 @@ const resolvers = {
     allUsers: (parent, args, {db}) =>
       db.collections("users")
         .find()
-        .toArray()
+        .toArray(),
+    me: (parent, args, {currentUser}) => currentUser
   },
 
   Mutation: {
@@ -211,7 +213,7 @@ const resolvers = {
     serialize: value => new Date(value).toISOString(),
     parseLiteral: ast => ast.value
   })
-}
+};
 
 const requestGithubToken = credentials =>
   fetch("https://github.com/login/oauth/access_token", {
@@ -225,7 +227,7 @@ const requestGithubToken = credentials =>
     .then(res => res.json())
     .catch(error => {
       throw new Error(JSON.stringify(error));
-    })
+    });
 
 const requestGithubUserAccount = token =>
   fetch(`https://api.github.com/user`, {
@@ -237,17 +239,17 @@ const requestGithubUserAccount = token =>
     .then(res => res.json())
     .catch(error => {
       throw new Error(JSON.stringify(error));
-    })
+    });
 
 const authorizeWithGithub = async (credentials) => {
   const {access_token} = await requestGithubToken(credentials);
   const githubUser = await requestGithubUserAccount(access_token);
   return {...githubUser, access_token}
-}
+};
 
 const start = async () => {
   const app = express();
-  const DB = process.env.DB_HOST
+  const DB = process.env.DB_HOST;
   const PORT = 4000;
 
   const client = await MongoClient.connect(
@@ -255,11 +257,21 @@ const start = async () => {
     {
       useNewUrlParser: true
     }
-  )
-  const db = client.db()
-  const context = {db}
+  );
+  const db = client.db();
 
-  const server = new ApolloServer({typeDefs, resolvers, context});
+  const server = new ApolloServer({
+    typeDefs, resolvers, context: async ({req}) => {
+      const githubToken = req.headers.authorization;
+      const currentUser = await db
+        .collection("users")
+        .findOne({
+          githubToken
+        })
+
+      return {db, currentUser}
+    }
+  });
   await server.start();
   server.applyMiddleware({app});
 
