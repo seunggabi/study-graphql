@@ -1,7 +1,8 @@
-query listPhotos {
+query photos {
   allPhotos {
-    id
-    name
-    description
+    url
+    taggedUsers {
+      name
+    }
   }
 }
