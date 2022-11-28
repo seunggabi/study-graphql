@@ -1,0 +1,7 @@
+query listPhotos {
+  allPhotos {
+    id
+    name
+    description
+  }
+}
