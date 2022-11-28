@@ -1,5 +1,7 @@
 # graphql
 
+### init
+
 ```shell
 brew tap mongodb/brew
 brew install mongodb-community
@@ -27,7 +29,13 @@ npm start
 
 ```shell
 curl --request POST \
-  --header 'content-type: application/json' \
+  --header 'Content-Type: application/json' \
   --url http://localhost:4000/ \
   --data '{"query":"query {totalPhotos}"}'
+```
+
+### oauth
+```
+id: Iv1.73e2a9dfda956446
+secret: 
 ```
