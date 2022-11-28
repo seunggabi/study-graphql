@@ -28,13 +28,16 @@ brew install npm
 ```shell
 cd backend
 
-npm init -y
 npm install
 
 npm start
 ``` 
 ```shell
 cd frontend
+
+npm install
+
+npm start
 ```
 
 ### query
