@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint '**/*.{js,jsx}' --quiet --fix",
-    "start": "DB_HOST=mongodb://graphql:graphql@localhost:27017/graphql nodemon -e js,json,graphql",
+    "start": "nodemon -e js,json,graphql",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
