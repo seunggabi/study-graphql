@@ -1,7 +1,9 @@
-mutation newPhoto($name: String!, $description: String) {
-  postPhoto(name: $name, description: $description) {
+mutation newPhoto($input: PostPhotoInput!) {
+  postPhoto(input: $input) {
     id,
     name,
-    description
+    url,
+    description,
+    category
   }
 }
