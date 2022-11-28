@@ -1,5 +1,7 @@
-const {ApolloServer} = require("apollo-server");
+const {ApolloServer} = require("apollo-server-express");
+const express = require("express")
 const {GraphQLScalarType} = require("graphql/type");
+const expressPlayground = require("graphql-playground-middleware-express").default
 
 const typeDefs = `
   scalar DateTime
@@ -150,16 +152,32 @@ const resolvers = {
   DateTime: new GraphQLScalarType({
     name: "DateTime",
     description: "A valid date time value.",
-    parseValue: value => new Date(vlaue),
+    parseValue: value => new Date(value),
     serialize: value => new Date(value).toISOString(),
     parseLiteral: ast => ast.value
   })
 };
 
-const server = new ApolloServer({
-  typeDefs, resolvers,
-});
+const start = async () => {
+  const app = express();
+  const PORT = 4000;
 
-server
-  .listen()
-  .then(({url}) => console.log(`GraphQL Service running on ${url}`));
+  const server = new ApolloServer({typeDefs, resolvers});
+
+  await server.start();
+  server.applyMiddleware({app});
+
+  app
+    .get("/", (req, res) => {
+      return res.send("<h1>WELCOME to PhotoShare API</h1>");
+    })
+    .get("/playground", expressPlayground({endpoint: "/graphql"}))
+
+  app.listen(PORT, () => {
+    console.log(
+      `GraphQL Server running @ http://localhost:${PORT}${server.graphqlPath}`
+    );
+  });
+};
+
+start();
