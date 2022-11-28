@@ -24,12 +24,18 @@ db.createCollection("photos")
 
 ```shell
 brew install npm
+```
+```shell
+cd backend
 
 npm init -y
 npm install
 
 npm start
 ``` 
+```shell
+cd frontend
+```
 
 ### query
 
