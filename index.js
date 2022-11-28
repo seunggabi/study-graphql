@@ -2,6 +2,8 @@ const {ApolloServer} = require("apollo-server-express");
 const express = require("express")
 const {GraphQLScalarType} = require("graphql/type");
 const expressPlayground = require("graphql-playground-middleware-express").default
+const {MongoClient} = require("mongodb")
+require("dotenv").config()
 
 const typeDefs = `
   scalar DateTime
@@ -25,6 +27,8 @@ const typeDefs = `
   type Query {
     totalPhotos: Int!
     allPhotos: [Photo!]!
+    totalUsers: Int!
+    allUsers: [User!]!
   }
 
   type Mutation {
@@ -110,8 +114,20 @@ const tags = [
 
 const resolvers = {
   Query: {
-    totalPhotos: () => photos.length,
-    allPhotos: () => photos,
+    totalPhotos: (parent, args, {db}) =>
+      db.collection("photos")
+        .estimatedDocumentCount(),
+    allPhotos: (parent, args, {db}) =>
+      db.collection("photos")
+        .find()
+        .toArray(),
+    totalUsers: (parent, args, {db}) =>
+      db.collections("users")
+        .estimatedDocumentCount(),
+    allUsers: (parent, args, {db}) =>
+      db.collections("users")
+        .find()
+        .toArray()
   },
 
   Mutation: {
@@ -160,10 +176,19 @@ const resolvers = {
 
 const start = async () => {
   const app = express();
+  const DB = process.env.DB_HOST
   const PORT = 4000;
 
-  const server = new ApolloServer({typeDefs, resolvers});
+  const client = await MongoClient.connect(
+    DB,
+    {
+      useNewUrlParser: true
+    }
+  )
+  const db = client.db()
+  const context = {db}
 
+  const server = new ApolloServer({typeDefs, resolvers, context});
   await server.start();
   server.applyMiddleware({app});
 
