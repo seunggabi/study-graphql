@@ -1,6 +1,11 @@
 # graphql
 > https://github.com/MoonHighway/learning-graphql
 
+### link
+- http://localhost:4000/
+- http://localhost:4000/graphql
+- http://localhost:4000/playground
+
 ### init
 
 ```shell
