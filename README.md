@@ -1,4 +1,4 @@
-# graphql
+# study-graphql
 > https://github.com/MoonHighway/learning-graphql
 
 ### link
